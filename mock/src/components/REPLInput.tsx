@@ -19,20 +19,65 @@ export function REPLInput(props: REPLInputProps) {
   // Manages the contents of the input box
   const [commandString, setCommandString] = useState<string>('');
   const [count, setCount] = useState<number>(0);
+  const [loaded, setLoaded] = useState<string>("");
   const handleClick = () => {
     setCount(count + 1);
   };
 
+  const view_csv = new Map([
+    [
+      "filepath1.csv",
+      [
+        ["Hi", "i'm", "simone"],
+        ["Hi", "i'm", "Maddie"],
+      ],
+    ],
+    [
+      "filepath2.csv",
+      [
+        ["the", "dog", "barks"],
+        ["The", "cat", "meows"],
+      ],
+    ],
+    [
+      "filepath3.csv",
+      [
+        ["track", "and", "field"],
+        ["water", "polo"],
+      ],
+    ],
+  ]);
+
   function getResult(commandString: string, verbose: boolean): string {
 
-    return "";
+    var result;
+    if (commandString === "mode") {
+      if (verbose) {
+        result = "state: verbose";
+      } else {
+        result = "state: brief"
+      }
+      return result;
+    } else if (commandString.split(" ")[0] === "load_file" && commandString.split(" ").length === 2) {
+      var file = commandString.split(" ")[1];
+      setLoaded(file);
+      result = "loaded file " + file;
+      return result;
+
+    } else if (commandString.split(" ")[0] === "search" && commandString.split(" ").length === 3) {
+      if (loaded != "") {
+
+      }
+
+    } else if (commandString.split(" ")[0] === "view" && commandString.split(" ").length === 1) {
+      if (loaded != "") {
+
+      }
+    }
+    result = "not a valid command, please try again";
+    return result;
 
   }
-  // TODO WITH TA : add a count state
-
-  // TODO WITH TA: build a handleSubmit function called in button onClick
-  // TODO: Once it increments, try to make it push commands... Note that you can use the `...` spread syntax to copy what was there before
-  // add to it with new commands.
   /**
    * We suggest breaking down this component into smaller components, think about the individual pieces 
    * of the REPL and how they connect to each other...
@@ -53,9 +98,6 @@ export function REPLInput(props: REPLInputProps) {
     }
 
     setCommandString("");
-
-    props.setHistory([...props.history, commandString]);
-    setCommandString('');
     return <h1>props.history</h1>
 
   }
