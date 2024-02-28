@@ -51,12 +51,12 @@ export function REPLInput(props: REPLInputProps) {
   const search_csv = new Map([
     [
       "search 1 Maddie",
-      ["the", "Maddie", "parrot"
+      [["the", "Maddie", "parrot"]
       ],
     ],
     [
-      "2 Simone",
-      ["the", "green", "grass"
+      "search 2 grass",
+      [["the", "green", "grass"]
       ],
     ]
   ]);
@@ -66,10 +66,12 @@ export function REPLInput(props: REPLInputProps) {
     var result;
     if (commandString === "mode") {
       if (verbose) {
-        result = "state: verbose";
+        result = "mode changed to brief";
+
       } else {
-        result = "state: brief"
+        result = "mode changed to verbose"
       }
+      props.setVerbose(!verbose);
       return result;
     } else if (commandString.split(" ")[0] === "load_file" && commandString.split(" ").length === 2) {
       var file = commandString.split(" ")[1];
@@ -78,21 +80,11 @@ export function REPLInput(props: REPLInputProps) {
       return result;
 
     } else if (commandString.split(" ")[0] === "search" && commandString.split(" ").length === 3) {
-      var list = commandString.split(" ");
-      var search_val = list[2];
-      var columns = list[1];
       if (loaded != "") {
-
-
-      }
-
-    }
-    else if (commandString.split(" ")[0] === "view" && commandString.split(" ").length === 1) {
-      if (loaded != "") {
-        if (view_csv.has(loaded)) {
-          const value = view_csv.get(loaded);
+        var value;
+        if ((value = search_csv.get(commandString)) != undefined) {
           return (
-            <div className="html-table" aria-label='html-table'>
+            <table className="html-table" aria-label='html-table'>
               {value.map((command, index) => (
                 <tr key={index}>
                   {command.map((command2, index2) => (
@@ -100,57 +92,77 @@ export function REPLInput(props: REPLInputProps) {
                   ))}
                 </tr>
               ))}
-            </div>
+            </table>
           );
         }
 
-        //   }
       }
-      result = "not a valid command, please try again";
-      return result;
 
     }
-    /**
-     * We suggest breaking down this component into smaller components, think about the individual pieces 
-     * of the REPL and how they connect to each other...
-     */
-    function handleSubmit(commandString: string) {
+    else if (commandString.split(" ")[0] === "view" && commandString.split(" ").length === 1) {
+      if (loaded != "") {
+        var value;
+        if ((value = view_csv.get(loaded)) != undefined) {
+          return (
+            <table className="html-table" aria-label='html-table'>
+              {value.map((command, index) => (
+                <tr key={index}>
+                  {command.map((command2, index2) => (
+                    <td key={index2}>{command2}</td>
+                  ))}
+                </tr>
+              ))}
+            </table>
+          );
+        }
 
-
-      if (commandString === "mode") {
-        props.setVerbose(!props.verbose);
       }
-      setCount(count + 1);
-      if (props.verbose === false) {
-        props.setHistory([...props.history, getResult(commandString, props.verbose)]);
-      } else {
-        props.setHistory([...props.history,
-        "Command: " + commandString + "\n" + "Output: " +
-        getResult(commandString, props.verbose)]);
-      }
-
-      setCommandString("");
-      return <h1>props.history</h1>
-
     }
+    result = "not a valid command, please try again";
+    return result;
 
-
-
-
-    return (
-      <div className="repl-input">
-        {/* This is a comment within the JSX. Notice that it's a TypeScript comment wrapped in
-            braces, so that React knows it should be interpreted as TypeScript */}
-        {/* I opted to use this HTML tag; you don't need to. It structures multiple input fields
-            into a single unit, which makes it easier for screenreaders to navigate. */}
-        <fieldset>
-          <legend>Enter a command:</legend>
-          <ControlledInput value={commandString} setValue={setCommandString} ariaLabel={"Command input"} />
-        </fieldset>
-        {/* TODO WITH TA: Build a handleSubmit function that increments count and displays the text in the button */}
-        {/* TODO: Currently this button just counts up, can we make it push the contents of the input box to the history?*/}
-
-        <button onClick={() => handleSubmit(commandString)}>Submit</button>
-      </div>
-    );
   }
+  /**
+   * We suggest breaking down this component into smaller components, think about the individual pieces 
+   * of the REPL and how they connect to each other...
+   */
+  function handleSubmit(commandString: string) {
+
+
+    if (commandString === "mode") {
+      props.setVerbose(!props.verbose);
+    }
+    setCount(count + 1);
+    if (props.verbose === false) {
+      props.setHistory([...props.history, getResult(commandString, props.verbose)]);
+    } else {
+      props.setHistory([...props.history,
+      "Command: " + commandString + "\n" + "Output: " +
+      getResult(commandString, props.verbose)]);
+    }
+
+    setCommandString("");
+    return <h1>props.history</h1>
+
+  }
+
+
+
+
+  return (
+    <div className="repl-input">
+      {/* This is a comment within the JSX. Notice that it's a TypeScript comment wrapped in
+            braces, so that React knows it should be interpreted as TypeScript */}
+      {/* I opted to use this HTML tag; you don't need to. It structures multiple input fields
+            into a single unit, which makes it easier for screenreaders to navigate. */}
+      <fieldset>
+        <legend>Enter a command:</legend>
+        <ControlledInput value={commandString} setValue={setCommandString} ariaLabel={"Command input"} />
+      </fieldset>
+      {/* TODO WITH TA: Build a handleSubmit function that increments count and displays the text in the button */}
+      {/* TODO: Currently this button just counts up, can we make it push the contents of the input box to the history?*/}
+
+      <button onClick={() => handleSubmit(commandString)}>Submit</button>
+    </div>
+  );
+}
