@@ -2,6 +2,7 @@ import '../styles/main.css';
 
 interface REPLHistoryProps {
     history: string[];
+    verbose: boolean
 }
 export function REPLHistory(props: REPLHistoryProps) {
     return (

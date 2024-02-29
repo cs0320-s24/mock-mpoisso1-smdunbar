@@ -21,29 +21,41 @@ export function REPLInput(props: REPLInputProps) {
   const [count, setCount] = useState<number>(0);
   const [loaded, setLoaded] = useState<string>("");
   const load: REPLFunction = (args: string[]): string | string[][] => {
-    setLoaded(args[1]);
-    const result = "loaded file " + args[1];
-    return result;
+    if (args.length == 2) {
+      setLoaded(args[1]);
+      const result = "loaded file " + args[1];
+      return result;
+    } else {
+      return "incorrect number of arguments";
+    }
   };
 
   const view: REPLFunction = (args: string[]): string | string[][] => {
     if (loaded != "") {
-      const result = view_csv.get(loaded);
-      if (result === undefined) {
-        return "No file to view";
+      if (args.length == 1) {
+        const result = view_csv.get(loaded);
+        if (result === undefined) {
+          return "No file to view";
+        }
+        return result;
+      } else {
+        return "incorrect number of arguments";
       }
-      return result;
     } else {
       return "no file is loaded, please try again";
     }
   };
   const search: REPLFunction = (args: string[]): string | string[][] => {
     if (loaded != "") {
-      const result = search_csv.get(args[0]);
-      if (result === undefined) {
-        return "Query not found";
+      if (args.length == 3) {
+        const result = search_csv.get(args[1] + " " + args[2]);
+        if (result === undefined) {
+          return "Query not found";
+        }
+        return result;
+      } else {
+        return "incorrect number of arguments";
       }
-      return result;
     } else {
       return "no file is loaded, please try again";
     }
@@ -52,8 +64,9 @@ export function REPLInput(props: REPLInputProps) {
     setCount(count + 1);
   };
 
-  var map = starterFunc(search =search,load =, view =   );
-  
+  var funcMap = starterFunc(load, view, search);
+
+
   const view_csv = new Map([
     [
       "filepath1.csv",
@@ -79,8 +92,8 @@ export function REPLInput(props: REPLInputProps) {
   ]);
 
   const search_csv = new Map([
-    ["search 1 Maddie", [["the", "Maddie", "parrot"]]],
-    ["search 2 grass", [["the", "green", "grass"]]],
+    ["1 Maddie", [["the", "Maddie", "parrot"]]],
+    ["2 grass", [["the", "green", "grass"]]],
   ]);
 
 
@@ -94,21 +107,11 @@ export function REPLInput(props: REPLInputProps) {
       }
       props.setVerbose(!verbose);
       return result;
-    } else if (
-      commandString.split(" ")[0] === "load_file" &&
-      commandString.split(" ").length === 2
-    ) {
-      return load(commandString.split(" "));
-    } else if (
-      commandString.split(" ")[0] === "search" &&
-      commandString.split(" ").length === 3
-    ) {
-      return search([commandString]);
-    } else if (
-      commandString.split(" ")[0] === "view" &&
-      commandString.split(" ").length === 1
-    ) {
-      return view(commandString.split(" "));
+    } else {
+      var value;
+      if ((value = funcMap.get(commandString.split(" ")[0])) != undefined) {
+        return value(commandString.split(" "));
+      }
     }
     result = "not a valid command, please try again";
     return result;
@@ -131,10 +134,10 @@ export function REPLInput(props: REPLInputProps) {
       props.setHistory([
         ...props.history,
         "Command: " +
-          commandString +
-          "\n" +
-          "Output: " +
-          getResult(commandString, props.verbose),
+        commandString +
+        "\n" +
+        "Output: " +
+        getResult(commandString, props.verbose),
       ]);
     }
 
