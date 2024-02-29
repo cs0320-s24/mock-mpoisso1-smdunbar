@@ -1,6 +1,8 @@
-import '../styles/main.css';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { ControlledInput } from './ControlledInput';
+import "../styles/main.css";
+import { Dispatch, SetStateAction, useState } from "react";
+import { ControlledInput } from "./ControlledInput";
+import { REPLFunction } from "./REPLFunction";
+import { starterFunc } from "./REPLFunction";
 
 interface REPLInputProps {
   history: string[];
@@ -8,22 +10,50 @@ interface REPLInputProps {
   verbose: boolean;
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
+
 // You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
 // REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
 
-
-
 export function REPLInput(props: REPLInputProps) {
-
-  // Remember: let React manage state in your webapp. 
+  // Remember: let React manage state in your webapp.
   // Manages the contents of the input box
-  const [commandString, setCommandString] = useState<string>('');
+  const [commandString, setCommandString] = useState<string>("");
   const [count, setCount] = useState<number>(0);
   const [loaded, setLoaded] = useState<string>("");
+  const load: REPLFunction = (args: string[]): string | string[][] => {
+    setLoaded(args[1]);
+    const result = "loaded file " + args[1];
+    return result;
+  };
+
+  const view: REPLFunction = (args: string[]): string | string[][] => {
+    if (loaded != "") {
+      const result = view_csv.get(loaded);
+      if (result === undefined) {
+        return "No file to view";
+      }
+      return result;
+    } else {
+      return "no file is loaded, please try again";
+    }
+  };
+  const search: REPLFunction = (args: string[]): string | string[][] => {
+    if (loaded != "") {
+      const result = search_csv.get(args[0]);
+      if (result === undefined) {
+        return "Query not found";
+      }
+      return result;
+    } else {
+      return "no file is loaded, please try again";
+    }
+  };
   const handleClick = () => {
     setCount(count + 1);
   };
 
+  var map = starterFunc(search =search,load =, view =   );
+  
   const view_csv = new Map([
     [
       "filepath1.csv",
@@ -49,105 +79,68 @@ export function REPLInput(props: REPLInputProps) {
   ]);
 
   const search_csv = new Map([
-    [
-      "search 1 Maddie",
-      [["the", "Maddie", "parrot"]
-      ],
-    ],
-    [
-      "search 2 grass",
-      [["the", "green", "grass"]
-      ],
-    ]
+    ["search 1 Maddie", [["the", "Maddie", "parrot"]]],
+    ["search 2 grass", [["the", "green", "grass"]]],
   ]);
 
-  function getResult(commandString: string, verbose: boolean): any {
 
+  function getResult(commandString: string, verbose: boolean): any {
     var result;
     if (commandString === "mode") {
       if (verbose) {
         result = "mode changed to brief";
-
       } else {
-        result = "mode changed to verbose"
+        result = "mode changed to verbose";
       }
       props.setVerbose(!verbose);
       return result;
-    } else if (commandString.split(" ")[0] === "load_file" && commandString.split(" ").length === 2) {
-      var file = commandString.split(" ")[1];
-      setLoaded(file);
-      result = "loaded file " + loaded;
-      return result;
-
-    } else if (commandString.split(" ")[0] === "search" && commandString.split(" ").length === 3) {
-      if (loaded != "") {
-        var value;
-        if ((value = search_csv.get(commandString)) != undefined) {
-          return (
-            <table className="html-table" aria-label='html-table'>
-              {value.map((command, index) => (
-                <tr key={index}>
-                  {command.map((command2, index2) => (
-                    <td key={index2}>{command2}</td>
-                  ))}
-                </tr>
-              ))}
-            </table>
-          );
-        }
-
-      }
-
-    }
-    else if (commandString.split(" ")[0] === "view" && commandString.split(" ").length === 1) {
-      if (loaded != "") {
-        var value;
-        if ((value = view_csv.get(loaded)) != undefined) {
-          return (
-            <table className="html-table" aria-label='html-table'>
-              {value.map((command, index) => (
-                <tr key={index}>
-                  {command.map((command2, index2) => (
-                    <td key={index2}>{command2}</td>
-                  ))}
-                </tr>
-              ))}
-            </table>
-          );
-        }
-
-      }
+    } else if (
+      commandString.split(" ")[0] === "load_file" &&
+      commandString.split(" ").length === 2
+    ) {
+      return load(commandString.split(" "));
+    } else if (
+      commandString.split(" ")[0] === "search" &&
+      commandString.split(" ").length === 3
+    ) {
+      return search([commandString]);
+    } else if (
+      commandString.split(" ")[0] === "view" &&
+      commandString.split(" ").length === 1
+    ) {
+      return view(commandString.split(" "));
     }
     result = "not a valid command, please try again";
     return result;
-
   }
   /**
-   * We suggest breaking down this component into smaller components, think about the individual pieces 
+   * We suggest breaking down this component into smaller components, think about the individual pieces
    * of the REPL and how they connect to each other...
    */
   function handleSubmit(commandString: string) {
-
-
     if (commandString === "mode") {
       props.setVerbose(!props.verbose);
     }
     setCount(count + 1);
     if (props.verbose === false) {
-      props.setHistory([...props.history, getResult(commandString, props.verbose)]);
+      props.setHistory([
+        ...props.history,
+        getResult(commandString, props.verbose),
+      ]);
     } else {
-      props.setHistory([...props.history,
-      "Command: " + commandString + "\n" + "Output: " +
-      getResult(commandString, props.verbose)]);
+      props.setHistory([
+        ...props.history,
+        "Command: " +
+          commandString +
+          "\n" +
+          "Output: " +
+          getResult(commandString, props.verbose),
+      ]);
     }
 
     setCommandString("");
-    return <h1>props.history</h1>
-
+    return <h1>props.history</h1>;
   }
-
-
-
 
   return (
     <div className="repl-input">
@@ -157,7 +150,11 @@ export function REPLInput(props: REPLInputProps) {
             into a single unit, which makes it easier for screenreaders to navigate. */}
       <fieldset>
         <legend>Enter a command:</legend>
-        <ControlledInput value={commandString} setValue={setCommandString} ariaLabel={"Command input"} />
+        <ControlledInput
+          value={commandString}
+          setValue={setCommandString}
+          ariaLabel={"Command input"}
+        />
       </fieldset>
       {/* TODO WITH TA: Build a handleSubmit function that increments count and displays the text in the button */}
       {/* TODO: Currently this button just counts up, can we make it push the contents of the input box to the history?*/}
