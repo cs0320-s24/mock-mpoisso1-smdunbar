@@ -51,6 +51,10 @@ export function REPLInput(props: REPLInputProps) {
   function getResult(commandString: string, verbose: boolean): string {
 
     var result;
+    interface verboseReturn {
+      command: string,
+      result: string | string[][]
+    }
     if (commandString === "mode") {
       if (verbose) {
         result = "state: verbose";
@@ -88,13 +92,10 @@ export function REPLInput(props: REPLInputProps) {
     if (commandString === "mode") {
       props.setVerbose(!props.verbose);
     }
-    setCount(count + 1);
     if (props.verbose === false) {
       props.setHistory([...props.history, getResult(commandString, props.verbose)]);
     } else {
-      props.setHistory([...props.history,
-      "Command: " + commandString + "\n" + "Output: " +
-      getResult(commandString, props.verbose)]);
+      props.setHistory([...props.history, getResult(commandString, props.verbose)]);
     }
 
     setCommandString("");

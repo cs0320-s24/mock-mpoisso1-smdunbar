@@ -22,7 +22,7 @@ export default function REPL() {
       {/*This is where your REPLHistory might go... You also may choose to add it within your REPLInput 
       component or somewhere else depending on your component organization. What are the pros and cons of each? */}
       {/* TODO: Update your REPLHistory and REPLInput to take in new shared state as props */}
-      <REPLHistory history={history} />
+      <REPLHistory history={history} verbose={verbose} />
       <hr></hr>
       <REPLInput history={history} setHistory={setHistory} verbose={verbose} setVerbose={setVerbose} />
     </div>
