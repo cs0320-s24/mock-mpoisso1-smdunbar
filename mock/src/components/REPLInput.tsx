@@ -10,6 +10,10 @@ interface REPLInputProps {
   verbose: boolean;
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
+export interface returnObj {
+  command: string;
+  result: string | string[][];
+}
 
 // You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
 // REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
@@ -60,9 +64,6 @@ export function REPLInput(props: REPLInputProps) {
       return "no file is loaded, please try again";
     }
   };
-  const handleClick = () => {
-    setCount(count + 1);
-  };
 
   var funcMap = starterFunc(load, view, search);
 
@@ -110,12 +111,18 @@ export function REPLInput(props: REPLInputProps) {
     } else {
       var value;
       if ((value = funcMap.get(commandString.split(" ")[0])) != undefined) {
-        return value(commandString.split(" "));
+        let commandOutput: returnObj = {
+          command: commandString,
+          result: value(commandString.split(" "))
+
+        }
+        return commandOutput;
       }
     }
     result = "not a valid command, please try again";
     return result;
   }
+
   /**
    * We suggest breaking down this component into smaller components, think about the individual pieces
    * of the REPL and how they connect to each other...
