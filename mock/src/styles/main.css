@@ -32,6 +32,10 @@
     display: block;
 }
 
+.outputCommand {
+    color: rgb(37, 220, 187)
+}
+
 button {
     margin: auto;
     display: block;

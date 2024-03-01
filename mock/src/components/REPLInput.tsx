@@ -5,8 +5,8 @@ import { REPLFunction } from "./REPLFunction";
 import { starterFunc } from "./REPLFunction";
 
 interface REPLInputProps {
-  history: returnObj[];
-  setHistory: Dispatch<SetStateAction<returnObj[]>>;
+  history: any[];
+  setHistory: Dispatch<SetStateAction<any[]>>;
   verbose: boolean;
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
@@ -22,7 +22,6 @@ export function REPLInput(props: REPLInputProps) {
   // Remember: let React manage state in your webapp.
   // Manages the contents of the input box
   const [commandString, setCommandString] = useState<string>("");
-  const [count, setCount] = useState<number>(0);
   const [loaded, setLoaded] = useState<string>("");
   const load: REPLFunction = (args: string[]): string | string[][] => {
     if (args.length == 2) {
@@ -107,20 +106,17 @@ export function REPLInput(props: REPLInputProps) {
         result = "mode changed to verbose";
       }
       props.setVerbose(!verbose);
-      return result;
+      console.log(result);
+      return [commandString, result];
     } else {
-      var value;
-      if ((value = funcMap.get(commandString.split(" ")[0])) != undefined) {
-        let commandOutput: returnObj = {
-          command: commandString,
-          result: value(commandString.split(" "))
-
-        }
-        return commandOutput;
+      var func;
+      if ((func = funcMap.get(commandString.split(" ")[0])) != undefined) {
+        return [commandString, func(commandString.split(" "))];
       }
     }
     result = "not a valid command, please try again";
-    return result;
+    console.log(result);
+    return [commandString, result];
   }
 
   /**
@@ -128,10 +124,6 @@ export function REPLInput(props: REPLInputProps) {
    * of the REPL and how they connect to each other...
    */
   function handleSubmit(commandString: string) {
-    if (commandString === "mode") {
-      props.setVerbose(!props.verbose);
-    }
-
     props.setHistory([
       ...props.history,
       getResult(commandString, props.verbose),
