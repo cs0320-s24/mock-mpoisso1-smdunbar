@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
 import { REPLFunction } from "./REPLFunction";
 import { starterFunc } from "./REPLFunction";
+import { search_csv } from "./MockData";
+import { view_csv } from "./MockData";
 
 interface REPLInputProps {
   history: any[];
@@ -11,8 +13,8 @@ interface REPLInputProps {
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
 /**
- * 
- * @param props contains fields 
+ *
+ * @param props contains fields
  * history - array to hold history information
  * setHistory - function that sets the history array
  * verbose -  true if verbose mode is on, false otherwise
@@ -70,41 +72,11 @@ export function REPLInput(props: REPLInputProps) {
   // map containing the commands and their functions
   var funcMap = starterFunc(load, view, search);
 
-
-  const view_csv = new Map([
-    [
-      "filepath1.csv",
-      [
-        ["Hi", "i'm", "simone"],
-        ["Hi", "i'm", "Maddie"],
-      ],
-    ],
-    [
-      "filepath2.csv",
-      [
-        ["the", "dog", "barks"],
-        ["The", "cat", "meows"],
-      ],
-    ],
-    [
-      "filepath3.csv",
-      [
-        ["track", "and", "field"],
-        ["water", "polo"],
-      ],
-    ],
-  ]);
-
-  const search_csv = new Map([
-    ["1 Maddie", [["the", "Maddie", "parrot"]]],
-    ["2 grass", [["the", "green", "grass"]]],
-  ]);
-
   /**
-   * 
+   *
    * @param commandString the command entered by the user into the input box
    * @param verbose whether the repl is in verbose mode or not
-   * @returns an array where the first element is the command and the second is the result 
+   * @returns an array where the first element is the command and the second is the result
    * either a string or a string[][] depending on the command
    */
   function getResult(commandString: string, verbose: boolean): any {
@@ -129,9 +101,9 @@ export function REPLInput(props: REPLInputProps) {
     return [commandString, result];
   }
 
-  /** Sets history array to include the newest command and result and resets the 
+  /** Sets history array to include the newest command and result and resets the
    * command string to ""
-   * 
+   *
    * @param commandString the command entered by the user into the input box
    * @return a command box and submit button
    */
