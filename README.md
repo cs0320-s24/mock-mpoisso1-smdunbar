@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 116b33d (chore: prep for merge)
 # Project Details
 
 Project Name: Mock
