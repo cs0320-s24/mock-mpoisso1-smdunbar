@@ -1,3 +1,6 @@
+/**
+ * Mocked data for view
+ */
 export const view_csv = new Map([
   [
     "filepath1.csv",
@@ -15,11 +18,13 @@ export const view_csv = new Map([
     ],
   ],
   ["filepath4.csv", [["Hi"], ["Howdy"], ["g'day"]]],
-  ["filepath5.csv", [["Hi"]],],
-  ["filepath6.csv", [["Hi"], ["yo", "howdy"]],],
-
+  ["filepath5.csv", [["Hi"]]],
+  ["filepath6.csv", [["Hi"], ["yo", "howdy"]]],
 ]);
 
+/**
+ * Mocked data for search
+ */
 export const search_csv = new Map([
   ["2 Maddie", [["Hi", "i'm", "Maddie"]]],
   ["0 track", [["track", "and", "field"]]],
@@ -32,7 +37,5 @@ export const search_csv = new Map([
     ],
   ],
   ["0 hello", [["hello"]]],
-  ["1 roxy", [["rox"], ["roxanne", "grace"]]]
+  ["1 roxy", [["rox"], ["roxanne", "grace"]]],
 ]);
-
-

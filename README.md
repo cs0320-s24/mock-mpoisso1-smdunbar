@@ -1,7 +1,7 @@
-<<<<<<< HEAD
-=======
+# <<<<<<< HEAD
 
->>>>>>> 116b33d (chore: prep for merge)
+> > > > > > > 116b33d (chore: prep for merge)
+
 # Project Details
 
 Project Name: Mock
@@ -32,6 +32,15 @@ No known Bugs
 
 # Tests
 
+### Unit Tests
+
+a. "adding to map" - tests the addFunc function that adds a function to the function map
+b. "remove from map" - tests the removeFunc function that removes a function from the function map
+
+### Playwright Tests
+
+Our Playwright testing file was extremely extensive. To determine what need to be tested we focused on three main categories, brief, verbose, errors. For each functionality we checked that the proper output was printed when the program was in either verbose or brief mode. For both of these mode we tested outputs of various shapes, 2D arrays, 1D arrays, empty arrays, malformaed data, etc. We also tested the output when errors occured (file had not been loaded and view or search was called, incorrect nuber of arguments, not a command)
+
 # How to
 
 ### Run the Program
@@ -39,5 +48,7 @@ No known Bugs
 To build and run our program, navigate to the mock folder in the directory, run npm start in terminal, and navigate to the provided localhost link.
 
 ### Run Tests
+
+To run tests, navigate to any of the testing files, navigate to the mock folder, run npm run test.
 
 # Collaboration
