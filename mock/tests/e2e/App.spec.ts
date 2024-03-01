@@ -11,9 +11,7 @@ import { expect, test } from "@playwright/test";
 
 // If you needed to do something before every test case...
 test.beforeEach(() => {
-    // ... you'd put it here.
-    // TODO: Is there something we need to do before every test case to avoid repeating code?
-  })
+})
 
 /**
  * Don't worry about the "async" yet. We'll cover it in more detail
@@ -32,7 +30,7 @@ test('on page load, i dont see the input box until login', async ({ page }) => {
   await page.goto('http://localhost:8000/');
   await expect(page.getByLabel('Sign Out')).not.toBeVisible()
   await expect(page.getByLabel('Command input')).not.toBeVisible()
-  
+
   // click the login button
   await page.getByLabel('Login').click();
   await expect(page.getByLabel('Sign Out')).toBeVisible()
@@ -56,13 +54,102 @@ test('after I type into the input box, its text changes', async ({ page }) => {
 });
 
 test('on page load, i see a button', async ({ page }) => {
-  // TODO WITH TA: Fill this in!
-});
-
-test('after I click the button, its label increments', async ({ page }) => {
-  // TODO WITH TA: Fill this in to test your button counter functionality!
+  await page.goto('http://localhost:8000/');
+  await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
 });
 
 test('after I click the button, my command gets pushed', async ({ page }) => {
-  // TODO: Fill this in to test your button push functionality!
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+
+  await page.getByLabel('Command input').click();
+  await page.getByLabel('Command input').fill('Awesome command');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByLabel('Command input')).toHaveValue("");
+
 });
+test('brief output after I load a file', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+
+  await page.getByLabel('Command input').click();
+  await page.getByLabel('Command input').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('loaded file filepath1.csv')).toBeVisible();
+
+});
+test('verbose output after I load a file', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+
+  await page.getByLabel('Command input').click();
+  await page.getByLabel('Command input').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('loaded file filepath1.csv')).toBeVisible();
+
+  await page.getByLabel('Command input').click();
+  await page.getByLabel('Command input').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:load_file filepath1.')).toBeVisible();
+});
+
+test('brief: view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('cell', { name: 'Hi' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'i\'m' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'simone' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Hi' }).nth(1).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'i\'m' }).nth(1).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Maddie' }).first()).toBeVisible();
+});
+test('verbose: view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');;
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:view output: Hii\'')).toBeVisible(); // whole html table block
+});
+
+test('no file to view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file file');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('No file to view')).toBeVisible();
+});
+test('test empty', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath2.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  // test that there is nothing there??
+});
+
+
+
+
