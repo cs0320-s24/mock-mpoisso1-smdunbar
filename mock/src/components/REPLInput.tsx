@@ -5,8 +5,8 @@ import { REPLFunction } from "./REPLFunction";
 import { starterFunc } from "./REPLFunction";
 
 interface REPLInputProps {
-  history: string[];
-  setHistory: Dispatch<SetStateAction<string[]>>;
+  history: returnObj[];
+  setHistory: Dispatch<SetStateAction<returnObj[]>>;
   verbose: boolean;
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
@@ -131,25 +131,13 @@ export function REPLInput(props: REPLInputProps) {
     if (commandString === "mode") {
       props.setVerbose(!props.verbose);
     }
-    setCount(count + 1);
-    if (props.verbose === false) {
-      props.setHistory([
-        ...props.history,
-        getResult(commandString, props.verbose),
-      ]);
-    } else {
-      props.setHistory([
-        ...props.history,
-        "Command: " +
-        commandString +
-        "\n" +
-        "Output: " +
-        getResult(commandString, props.verbose),
-      ]);
-    }
+
+    props.setHistory([
+      ...props.history,
+      getResult(commandString, props.verbose),
+    ]);
 
     setCommandString("");
-    return <h1>props.history</h1>;
   }
 
   return (

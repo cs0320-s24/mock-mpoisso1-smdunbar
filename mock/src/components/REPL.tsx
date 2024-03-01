@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/main.css';
 import { REPLHistory } from './REPLHistory';
-import { REPLInput } from './REPLInput';
+import { REPLInput, returnObj } from './REPLInput';
 
 /* 
   You'll want to expand this component (and others) for the sprints! Remember 
@@ -15,7 +15,7 @@ import { REPLInput } from './REPLInput';
 
 export default function REPL() {
   // TODO: Add some kind of shared state that holds all the commands submitted.
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<returnObj[]>([]);
   const [verbose, setVerbose] = useState<boolean>(false);
   return (
     <div className="repl">

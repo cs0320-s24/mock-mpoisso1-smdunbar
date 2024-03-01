@@ -12,13 +12,13 @@ export function REPLHistory(props: REPLHistoryProps) {
             {/* TODO: To go through all the pushed commands... try the .map() function! */}
             {props.history.map((object) => typeof object.result === "string" ?
                 !props.verbose ?
-                /*brief*/ <div className="repl-history">
-                        <p>{object.result}</p> </div> :
-                   /*verbose */ <div className="repl-history"> <p>command: {object.command} output: {object.result} </p></div>
+                    /*brief*/
+                    <p>{object.result}</p> :
+                   /*verbose */ <p>command: {object.command} output: {object.result} </p>
 
                 : !props.verbose ? // command is now a string[][]
-                    /*brief*/ <div className="repl-history"> <p>{object.result}</p> </div> :
-                    /*verbose */ <div className="repl-history"><p>command: {object.command} output: </p></div>
+                    /*brief*/ <p>{object.result}</p> :
+                    /*verbose */ <p>command: {object.command} output: </p>
             )}
 
         </div>
