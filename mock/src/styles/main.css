@@ -33,7 +33,8 @@
 }
 
 .outputCommand {
-    color: rgb(37, 220, 187)
+    color: rgb(37, 220, 187);
+    font-weight: bold
 }
 
 button {

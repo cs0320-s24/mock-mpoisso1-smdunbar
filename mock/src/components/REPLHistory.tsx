@@ -44,14 +44,14 @@ export function REPLHistory(props: REPLHistoryProps) {
                     /*verbose */
                     typeof (object[1]) == "string" ? // is the result a string?
                         //if verbose and string result:
-                        <p> <div className="outputCommand"><strong>command:
-                        </strong> </div>{object[0]} <div className="outputCommand">
-                                <strong>output: </strong> </div>{object[1]} </p >
+                        <p> <div className="outputCommand">command:
+                        </div>{object[0]} <div className="outputCommand">
+                                output:  </div>{object[1]} </p >
 
                         :   //if verbose and not string result:
-                    /*verbose */ <p > <div className="outputCommand"><strong>command:
-                        </strong> </div>{object[0]} <div className="outputCommand">
-                                <strong>output: </strong> </div> {makeHTMLTable(object[1])} </p>
+                    /*verbose */ <p > <div className="outputCommand">command:
+                        </div>{object[0]} <div className="outputCommand">
+                                output:</div> {makeHTMLTable(object[1])} </p>
             )}
 
         </div >
