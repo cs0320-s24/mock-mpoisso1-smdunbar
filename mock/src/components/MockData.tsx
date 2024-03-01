@@ -17,12 +17,12 @@ export const view_csv = new Map([
     "filepath3.csv",
     [
       ["track", "and", "field"],
-      ["water", "polo"],
+      ["water", "polo", "swimming"],
     ],
   ],
 ]);
 
 export const search_csv = new Map([
-  ["1 Maddie", [["the", "Maddie", "parrot"]]],
-  ["2 grass", [["the", "green", "grass"]]],
+  ["2 Maddie", [["Hi", "i'm", "Maddie"]]],
+  ["0 track", [["track", "and", "field"]]],
 ]);
