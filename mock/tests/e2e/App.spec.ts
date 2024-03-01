@@ -35,7 +35,7 @@ test('on page load, i dont see the input box until login', async ({ page }) => {
   await page.getByLabel('Login').click();
   await expect(page.getByLabel('Sign Out')).toBeVisible()
   await expect(page.getByLabel('Command input')).toBeVisible()
-})
+});
 
 test('after I type into the input box, its text changes', async ({ page }) => {
   // Step 1: Navigate to a URL
@@ -92,93 +92,253 @@ test('verbose output after I load a file', async ({ page }) => {
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page.getByText('command:load_file filepath1.')).toBeVisible();
 });
-test('verbose output after I load a file', async ({ page }) => {
+
+test('brief: view', async ({ page }) => {
   await page.goto('http://localhost:8000/');
   await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('cell', { name: 'Hi' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'i\'m' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'simone' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Hi' }).nth(1).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'i\'m' }).nth(1).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Maddie' }).first()).toBeVisible();
+});
+test('verbose: view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');;
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:view output: Hii\'')).toBeVisible(); // whole html table block
+});
 
-  test('brief: view', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('view');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByRole('cell', { name: 'Hi' }).first()).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'i\'m' }).first()).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'simone' }).first()).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Hi' }).nth(1).first()).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'i\'m' }).nth(1).first()).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Maddie' }).first()).toBeVisible();
-  });
-  test('verbose: view', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');;
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('mode');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('view');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByText('command:view output: Hii\'')).toBeVisible(); // whole html table block
-  });
-
-  test('no file to view', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file file');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('view');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByText('No file to view')).toBeVisible();
-  });
-  test('test empty', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file filepath2.csv');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('view');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('mode');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    // test that there is nothing there??
-  });
+test('no file to view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file file');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('No file to view')).toBeVisible();
+});
+test('test empty', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath2.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  // test that there is nothing there??
+});
 
 
-  test('brief test one col serach', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('search 0 hello');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByRole('cell', { name: 'hello' })).toBeVisible();
-  });
+test('brief test one col serach', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search 0 hello');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('cell', { name: 'hello' })).toBeVisible();
+});
 
-  test('verbose test one col search', async ({ page }) => {
-    await page.goto('http://localhost:8000/');
-    await page.getByLabel('Login').click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.getByPlaceholder('Enter command here!').click();
-    await page.getByPlaceholder('Enter command here!').fill('search 0 hello');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByRole('cell', { name: 'hello' })).toBeVisible();
-    await page.getByPlaceholder('Enter command here!').fill('mode');
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByText('command:mode output: mode')).toBeVisible();
-    await expect(page.getByText('command:search 0 hello output')).toBeVisible();
-  });
+test('verbose test one col search', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search 0 hello');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('cell', { name: 'hello' })).toBeVisible();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:mode output: mode')).toBeVisible();
+  await expect(page.getByText('command:search 0 hello output')).toBeVisible();
+});
+
+test('2d array brief search ', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search State RI');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('cell', { name: 'RI' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Providence' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'USA' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'RI' }).nth(1).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Newport' }).first()).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'USA' }).nth(1).first()).toBeVisible();
+
+});
+
+test('2d array verbose search ', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath1.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search State RI');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:search State RI output: RIProvidenceUSARINewportUSA')).toBeVisible();
+});
+
+test('query not found', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath2.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search 2 seven');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('Query not found')).toBeVisible();
+});
+
+test('no file search', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search 1 Maddie');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('No file is loaded, please try again')).toBeVisible();
+});
+
+test('search malformed response', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file file');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('search 1 roxy');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByLabel('html-table')).toBeVisible();
+});
+
+test('brief one col view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath4.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p').filter({ hasText: 'HiHowdyg\'day' })).toBeVisible();
+});
+
+test('verbose one col view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath4.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:view output: HiHowdyg')).toBeVisible();
+});
+
+test('brief view one row', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath5.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p').filter({ hasText: 'Hi' })).toBeVisible();
+});
+test('verbose view one row', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath5.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p').filter({ hasText: 'Hi' })).toBeVisible();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:view output: Hi')).toBeVisible();
+});
+
+test('brief malformed view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath6.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p').filter({ hasText: 'Hiyohowdy' })).toBeVisible();
+});
+test('verbose malformed view', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath6.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p').filter({ hasText: 'Hiyohowdy' })).toBeVisible();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('mode');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByText('command:view output: Hiyohowdy')).toBeVisible();
+});
+
+test('empty test', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+  await page.getByLabel('Login').click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await page.getByPlaceholder('Enter command here!').fill('load_file filepath2.csv');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByPlaceholder('Enter command here!').click();
+  await expect(page.locator('div').nth(3)).toBeVisible();
+  await page.getByPlaceholder('Enter command here!').fill('view');
+  await page.getByPlaceholder('Enter command here!').click();
+  await expect(page.locator('div').nth(3)).toBeVisible();
+});
+
+
+
+
+
 

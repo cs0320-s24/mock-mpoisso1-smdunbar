@@ -15,6 +15,9 @@ export const view_csv = new Map([
     ],
   ],
   ["filepath4.csv", [["Hi"], ["Howdy"], ["g'day"]]],
+  ["filepath5.csv", [["Hi"]],],
+  ["filepath6.csv", [["Hi"], ["yo", "howdy"]],],
+
 ]);
 
 export const search_csv = new Map([
