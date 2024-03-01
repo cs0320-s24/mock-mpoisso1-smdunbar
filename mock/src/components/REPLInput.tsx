@@ -10,19 +10,21 @@ interface REPLInputProps {
   verbose: boolean;
   setVerbose: Dispatch<SetStateAction<boolean>>;
 }
-export interface returnObj {
-  command: string;
-  result: string | string[][];
-}
-
-// You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
-// REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
-
+/**
+ * 
+ * @param props contains fields 
+ * history - array to hold history information
+ * setHistory - function that sets the history array
+ * verbose -  true if verbose mode is on, false otherwise
+ * setVerbose - function that sets the verbose boolean
+ * @returns repl input command box
+ */
 export function REPLInput(props: REPLInputProps) {
-  // Remember: let React manage state in your webapp.
-  // Manages the contents of the input box
+  // useStates
   const [commandString, setCommandString] = useState<string>("");
   const [loaded, setLoaded] = useState<string>("");
+
+  //functions to control commands
   const load: REPLFunction = (args: string[]): string | string[][] => {
     if (args.length == 2) {
       setLoaded(args[1]);
@@ -32,7 +34,7 @@ export function REPLInput(props: REPLInputProps) {
       return "incorrect number of arguments";
     }
   };
-
+  //view command handler
   const view: REPLFunction = (args: string[]): string | string[][] => {
     if (loaded != "") {
       if (args.length == 1) {
@@ -48,6 +50,8 @@ export function REPLInput(props: REPLInputProps) {
       return "no file is loaded, please try again";
     }
   };
+
+  //search command handler
   const search: REPLFunction = (args: string[]): string | string[][] => {
     if (loaded != "") {
       if (args.length == 3) {
@@ -63,7 +67,7 @@ export function REPLInput(props: REPLInputProps) {
       return "no file is loaded, please try again";
     }
   };
-
+  // map containing the commands and their functions
   var funcMap = starterFunc(load, view, search);
 
 
@@ -96,7 +100,13 @@ export function REPLInput(props: REPLInputProps) {
     ["2 grass", [["the", "green", "grass"]]],
   ]);
 
-
+  /**
+   * 
+   * @param commandString the command entered by the user into the input box
+   * @param verbose whether the repl is in verbose mode or not
+   * @returns an array where the first element is the command and the second is the result 
+   * either a string or a string[][] depending on the command
+   */
   function getResult(commandString: string, verbose: boolean): any {
     var result;
     if (commandString === "mode") {
@@ -110,18 +120,20 @@ export function REPLInput(props: REPLInputProps) {
       return [commandString, result];
     } else {
       var func;
+      //get the function from the function map
       if ((func = funcMap.get(commandString.split(" ")[0])) != undefined) {
         return [commandString, func(commandString.split(" "))];
       }
     }
     result = "not a valid command, please try again";
-    console.log(result);
     return [commandString, result];
   }
 
-  /**
-   * We suggest breaking down this component into smaller components, think about the individual pieces
-   * of the REPL and how they connect to each other...
+  /** Sets history array to include the newest command and result and resets the 
+   * command string to ""
+   * 
+   * @param commandString the command entered by the user into the input box
+   * @return a command box and submit button
    */
   function handleSubmit(commandString: string) {
     props.setHistory([
@@ -134,10 +146,6 @@ export function REPLInput(props: REPLInputProps) {
 
   return (
     <div className="repl-input">
-      {/* This is a comment within the JSX. Notice that it's a TypeScript comment wrapped in
-            braces, so that React knows it should be interpreted as TypeScript */}
-      {/* I opted to use this HTML tag; you don't need to. It structures multiple input fields
-            into a single unit, which makes it easier for screenreaders to navigate. */}
       <fieldset>
         <legend>Enter a command:</legend>
         <ControlledInput
@@ -146,9 +154,6 @@ export function REPLInput(props: REPLInputProps) {
           ariaLabel={"Command input"}
         />
       </fieldset>
-      {/* TODO WITH TA: Build a handleSubmit function that increments count and displays the text in the button */}
-      {/* TODO: Currently this button just counts up, can we make it push the contents of the input box to the history?*/}
-
       <button onClick={() => handleSubmit(commandString)}>Submit</button>
     </div>
   );
