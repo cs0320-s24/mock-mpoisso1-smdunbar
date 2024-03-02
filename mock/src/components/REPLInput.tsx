@@ -2,7 +2,7 @@ import "../styles/main.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
 import { REPLFunction } from "./REPLFunction";
-import { starterFunc, addFunc } from "./REPLFunction";
+import { starterFunc, addFunc, removeFunc } from "./REPLFunction";
 import { search_csv } from "./MockData";
 import { view_csv } from "./MockData";
 
@@ -76,6 +76,7 @@ export function REPLInput(props: REPLInputProps) {
   // map containing the commands and their functions
   var funcMap = starterFunc(load, view, search);
   addFunc(funcMap, "printHello", printHello);
+  //removeFunc(funcMap, "printHello");
 
   /**
    *
@@ -93,7 +94,6 @@ export function REPLInput(props: REPLInputProps) {
         result = "mode changed to verbose";
       }
       props.setVerbose(!verbose);
-      console.log(result);
       return [commandString, result];
     } else {
       var func;
