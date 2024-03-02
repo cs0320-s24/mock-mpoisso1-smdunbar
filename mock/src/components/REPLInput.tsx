@@ -2,7 +2,7 @@ import "../styles/main.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
 import { REPLFunction } from "./REPLFunction";
-import { starterFunc } from "./REPLFunction";
+import { starterFunc, addFunc } from "./REPLFunction";
 import { search_csv } from "./MockData";
 import { view_csv } from "./MockData";
 
@@ -69,8 +69,13 @@ export function REPLInput(props: REPLInputProps) {
       return "no file is loaded, please try again";
     }
   };
+
+  const printHello: REPLFunction = (args: string[]): string | string[][] => {
+    return "Hello!"
+  };
   // map containing the commands and their functions
   var funcMap = starterFunc(load, view, search);
+  addFunc(funcMap, "printHello", printHello);
 
   /**
    *
