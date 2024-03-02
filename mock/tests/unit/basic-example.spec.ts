@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import { addFunc } from "/Users/madeleinepoissonnier/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
-import { removeFunc } from "/Users/madeleinepoissonnier/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
-import { REPLFunction } from "/Users/madeleinepoissonnier/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
+import { addFunc } from "/Users/simonedunbar/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
+import { removeFunc } from "/Users/simonedunbar/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
+import { REPLFunction } from "/Users/simonedunbar/Desktop/cs32/mock-mpoisso1-smdunbar/mock/src/components/REPLFunction";
 
 /**
  * Unit test testing the addFunc function definted in REPLFunction
